@@ -12,11 +12,11 @@
 #define SUPERMAN_TEXTURE_PATH L"superman.png"
 
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 0, 0)
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 255)
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 
-#define MAX_FRAME_RATE 10
+#define MAX_FRAME_RATE 120
 
 using namespace std;
 
