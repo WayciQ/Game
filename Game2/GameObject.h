@@ -11,6 +11,7 @@ class GameObject
 	float x;
 	float y;
 	float vx;
+	float vy;
 	int currentState;
 
 	vector<LPANIMATION> animations;

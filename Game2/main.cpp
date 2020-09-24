@@ -80,11 +80,11 @@ void LoadResources() {
 
 
 	AT = new GameObject();
-	AT->SetPosition(75.0f, 100.0f);
-	AT->SetState(1);
+	AT->SetPosition(15.0f, 100.0f);
+	AT->SetState(0);
 	CC = new GameObject();
 	CC->SetPosition(75.0f, 100.0f);
-	CC->SetState(-1);
+	CC->SetState(0);
 }
 void Update(DWORD dt) {
 	AT->Update(dt);

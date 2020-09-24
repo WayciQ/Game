@@ -1,0 +1,8 @@
+﻿  Mario.cpp
+C:\Users\WayciQ\Desktop\Game\Game4\Mario.h(24,1): warning C4005: 'MARIO_STATE_STAND': macro redefinition
+C:\Users\WayciQ\Desktop\Game\Game4\Mario.h(22): message : see previous definition of 'MARIO_STATE_STAND'
+C:\Users\WayciQ\Desktop\Game\Game4\Mario.h(75,1): warning C4005: 'MARIO_RACCOON_FIGHT_WIDTH': macro redefinition
+C:\Users\WayciQ\Desktop\Game\Game4\MARIO_RACCOON.h(3): message : see previous definition of 'MARIO_RACCOON_FIGHT_WIDTH'
+C:\Users\WayciQ\Desktop\Game\Game4\Mario.h(76,1): warning C4005: 'MARIO_RACCOON_FIGHT_HEIGHT': macro redefinition
+C:\Users\WayciQ\Desktop\Game\Game4\MARIO_RACCOON.h(4): message : see previous definition of 'MARIO_RACCOON_FIGHT_HEIGHT'
+  Game4.vcxproj -> C:\Users\WayciQ\Desktop\Game\Game\Debug\Game4.exe

@@ -1,2 +1,8 @@
-﻿  main.cpp
+﻿  Game.cpp
+C:\Users\WayciQ\Desktop\Game\Game2\Game.cpp(7,13): warning C4552: '>>': result of expression not used
+  GameObject.cpp
+  main.cpp
+  Sprites.cpp
+  Textures.cpp
+  Generating Code...
   Game2.vcxproj -> C:\Users\WayciQ\Desktop\Game\Game\Debug\Game2.exe
