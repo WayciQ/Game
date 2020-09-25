@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Textures.h"
 #include "MARIO_RACCOON.h"
+#include "MARIO_FIRE.h"
 
 #define MARIO_WALKING_SPEED		0.1f 
 //0.1f
@@ -24,6 +25,9 @@
 #define MARIO_STATE_STAND			1000
 #define MARIO_STATE_FIGHT			1100
 #define MARIO_STATE_NOT_FIGHT		1300
+#define MARIO_STATE_FIRE			1400
+#define MARIO_STATE_FIRE_LEFT		1500
+#define MARIO_STATE_NOT_FIRE		1600
 #pragma region Normal
 //#define MARIO_ANI_BIG_IDLE_RIGHT		0
 //#define MARIO_ANI_BIG_IDLE_LEFT			1
@@ -59,6 +63,7 @@
 #define MARIO_ANI_DIE				12
 
 
+
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
 #define MARIO_LEVEL_RACCOON	3
@@ -88,6 +93,10 @@ class Mario : public GameObject
 	bool isJumping;
 	bool isFighting;
 	MARIO_RACCOON* raccoon ;
+	MARIO_FIRE* fire;
+	vector<MARIO_FIRE*>fires;
+	bool shooting;
+	void AddFire();
 public:
 	Mario() : GameObject()	
 	{
@@ -96,7 +105,10 @@ public:
 		isSiting = false;
 		isJumping = false;
 		isFighting = false;
+		shooting = false;
 		raccoon = new MARIO_RACCOON();
+		
+		//DebugOut(L"dcm no vo:%d", fire->animations.size());
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -106,6 +118,7 @@ public:
 	bool IsSitting() { return this->isSiting; }
 	bool IsJumping() { return this->isJumping; }
 	bool IsFighting() { return this->isFighting; }
+	bool Shooting() { return this->shooting; }
 	virtual void RenderBoundingBox();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

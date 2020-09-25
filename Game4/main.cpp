@@ -45,6 +45,7 @@
 
 #define ID_TEX_ENEMY 10
 #define ID_TEX_MISC 20
+#define ID_TEX_FIRE 30
 
 
 Game* game;
@@ -64,7 +65,7 @@ CSampleKeyHander* keyHandler;
 
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -74,15 +75,28 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		mario->SetState(MARIO_STATE_SIT);
 		break;
 	case DIK_D:
-		if (mario->IsFighting()) {
-			mario->SetState(MARIO_STATE_FIGHT);
-		}
+		mario->SetState(MARIO_STATE_FIGHT);
 		break;
+	case DIK_F:
+		//if(!mario->Shooting())
+		mario->SetState(MARIO_STATE_FIRE);
+		//DebugOut(L"ban /n");
+		break;
+		
 	case DIK_A: // reset
 		mario->SetState(MARIO_STATE_IDLE);
 		mario->SetLevel(MARIO_LEVEL_RACCOON);
 		mario->SetPosition(50.0f, 100.0f);
 		mario->SetSpeed(0, 0);
+		for (int i = 0; i < 4; i++)
+		{
+			goomba = new Goomba();
+			goomba->AddAnimation(701);
+			goomba->AddAnimation(702);
+			goomba->SetPosition(200 + i * 60, 135);
+			goomba->SetState(GOOMBA_STATE_WALKING);
+			objects.push_back(goomba);
+		}
 		break;
 	}
 }
@@ -97,11 +111,15 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 		break;
 	case DIK_D:
 		mario->SetState(MARIO_STATE_NOT_FIGHT);
-		mario->SetState(MARIO_STATE_IDLE);
+		break;
+	case DIK_F:
+		mario->SetState(MARIO_STATE_NOT_FIRE);
+		//DebugOut(L"khong ban");
 		break;
 	}
 
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+
+//	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
 void CSampleKeyHander::KeyState(BYTE* states)
@@ -113,14 +131,14 @@ void CSampleKeyHander::KeyState(BYTE* states)
 		if (game->IsKeyDown(DIK_S)) {
 			if(!mario->IsJumping())
 				mario->SetState(MARIO_STATE_JUMP_RIGHT);
-			DebugOut(L"[INFO]jump: %d\n", mario->GetState());
+			//DebugOut(L"[INFO]jump: %d\n", mario->GetState());
 		}
 		else if (game->IsKeyDown(DIK_DOWN)) {
 			mario->SetState(MARIO_STATE_SIT_PRESS);
 		}
 		else {
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-			DebugOut(L"[INFO] right %d\n", mario->GetState());
+			//DebugOut(L"[INFO] right %d\n", mario->GetState());
 		}
 			
 	}
@@ -129,22 +147,20 @@ void CSampleKeyHander::KeyState(BYTE* states)
 		if (game->IsKeyDown(DIK_S)) {
 			if (!mario->IsJumping())
 				mario->SetState(MARIO_STATE_JUMP_LEFT);
-			DebugOut(L"[INFO]jump: %d\n", mario->GetState());
+			//DebugOut(L"[INFO]jump: %d\n", mario->GetState());
 		}
 		else if (game->IsKeyDown(DIK_DOWN)) {
 			mario->SetState(MARIO_STATE_SIT_PRESS);
 		}
 		else{
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
-			DebugOut(L"[INFO] right %d\n", mario->GetState());
+			//DebugOut(L"[INFO] right %d\n", mario->GetState());
 		}
 			
 	}
-	else if (game->IsKeyDown(DIK_D)) {
-		if (!mario->IsFighting())
-			mario->SetState(MARIO_STATE_FIGHT);
-	}
+	
 	else if (game->IsKeyDown(DIK_DOWN)) {
+		if(!mario->IsSitting())
 			mario->SetState(MARIO_STATE_SIT_PRESS);
 	}
 	else if (! mario->IsJumping()) {
@@ -181,11 +197,13 @@ void LoadResources()
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	textures->Add(ID_TEX_MARIO, L"textures\\mario2.png", D3DCOLOR_XRGB(255, 255, 255));
+	textures->Add(ID_TEX_FIRE, L"textures\\dan.png", D3DCOLOR_XRGB(0, 0, 0));
 
 	Sprites* sprites = Sprites::GetInstance();
 	Animations* animations = Animations::GetInstance();
 
 	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
+	
 
 	// raccoon 
 
@@ -215,6 +233,18 @@ void LoadResources()
 	sprites->Add(13403, 348, 482, 371, 511, texMario);
 	sprites->Add(13404, 235, 442, 259, 471, texMario);
 	sprites->Add(13405, 380, 482, 406, 511, texMario);
+
+	LPDIRECT3DTEXTURE9 texFire = textures->Get(ID_TEX_FIRE);
+
+	sprites->Add(23001, 21, 83, 38, 100, texFire);
+	sprites->Add(23002, 141, 83, 158, 100, texFire);
+	sprites->Add(23003, 81, 83, 98, 100, texFire);
+	sprites->Add(23004, 121, 83, 138, 100, texFire);
+
+	sprites->Add(23101, 41, 83, 58, 100, texFire);
+	sprites->Add(23102, 161, 83, 178, 100, texFire);
+	sprites->Add(23103, 61, 83, 78, 100, texFire);
+	sprites->Add(23104, 101, 83, 118, 100, texFire);
 
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(20001, 408, 225, 424, 241, texMisc);
@@ -274,7 +304,7 @@ void LoadResources()
 	ani->Add(13206);
 	animations->Add(340, ani);
 
-	ani = new Animation(100);	// fight right
+	ani = new Animation(60);	// fight right
 	ani->Add(13301);
 	ani->Add(13302);
 	ani->Add(13303);
@@ -283,7 +313,7 @@ void LoadResources()
 	ani->Add(13302);
 	animations->Add(401, ani);
 
-	ani = new Animation(100);	// fight left
+	ani = new Animation(60);	// fight left
 	ani->Add(13401);
 	ani->Add(13402);
 	ani->Add(13403);
@@ -291,6 +321,20 @@ void LoadResources()
 	ani->Add(13405);
 	ani->Add(13402);
 	animations->Add(402, ani);
+
+	ani = new Animation(60);	// fire right
+	ani->Add(23001);
+	ani->Add(23002);
+	ani->Add(23003);
+	ani->Add(23004);
+	animations->Add(501, ani);
+
+	ani = new Animation(60);	// fire left
+	ani->Add(23101);
+	ani->Add(23102);
+	ani->Add(23103);
+	ani->Add(23104);
+	animations->Add(502, ani);
 
 
 	ani = new Animation(100);		// brick
@@ -330,6 +374,8 @@ void LoadResources()
 	mario->AddAnimation(401); 		// fight right
 	mario->AddAnimation(402);		// fight lefty
 	mario->AddAnimation(599);
+	mario->AddAnimation(501);		//fire right
+	mario->AddAnimation(502);		//fire left
 	mario->SetPosition(50.0f, 100);
 	objects.push_back(mario);
 

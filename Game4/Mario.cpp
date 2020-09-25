@@ -19,10 +19,45 @@ void Mario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
-	//raccoon->Update(dt, coObjects);
+	if (level == MARIO_LEVEL_RACCOON) {
+		if (isFighting) {
+			raccoon->Update(dt, coObjects);
+			raccoon->SetPosition(x, y);
+		}
+		for (int i = 0; i < fires.size(); i++) {
+			fires[i]->Update(dt, coObjects);
+		}
+
+		
+		
+	}
+
+	/*if (level == MARIO_LEVEL_RACCOON) {
+		
+		if (shooting) {
+			DebugOut(L"zo cho ban r");
+			MARIO_FIRE* fire = new MARIO_FIRE();
+			LPANIMATION ani = Animations::GetInstance()->Get(13);
+			fire->animations.push_back(ani);
+			 ani = Animations::GetInstance()->Get(14);
+			fire->animations.push_back(ani);
+			fire->SetPosition(x, y);
+			if (nx)
+				fire->SetState(MARIO_FIRE_STATE_FIRE_RIGHT);
+			else fire->SetState(MARIO_FIRE_STATE_FIRE_LEFT);
+			fires.push_back(fire);
+			if (fires.size())
+				for (UINT i = 0; i < fires.size(); i++) {
+					fires[i]->Update(dt, coObjects);
+				}
+		}
+		
+	}*/
+	
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
+
 	//DebugOut(L"mario: %d \n", coObjects->size());
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
@@ -206,11 +241,10 @@ void Mario::Render()
 						ani = MARIO_ANI_SIT_RIGHT;
 					else if (isJumping)
 						ani = MARIO_ANI_JUMP_RIGHT;
-					else if (isFighting)
-						ani = MARIO_ANI_FIGHT_RIGHT;
 					else
 						ani = MARIO_ANI_IDLE_RIGHT;
-						
+					/*if (isFighting)
+						ani = MARIO_ANI_FIGHT_RIGHT;*/
 					//DebugOut(L"[a]  nx== 0", ani);
 
 				}
@@ -220,11 +254,10 @@ void Mario::Render()
 						ani = MARIO_ANI_SIT_LEFT;
 					else if (isJumping)
 						ani = MARIO_ANI_JUMP_LEFT;
-					else if (isFighting)
-						ani = MARIO_ANI_FIGHT_LEFT;
 					else
 						ani = MARIO_ANI_IDLE_LEFT;
-						
+					/*if (isFighting)
+						ani = MARIO_ANI_FIGHT_LEFT;*/
 					//DebugOut(L"[a]  vx==0", ani);
 				}
 			}
@@ -233,11 +266,11 @@ void Mario::Render()
 					ani = MARIO_ANI_JUMP_RIGHT;
 				else if (isSiting)
 					ani = MARIO_ANI_SIT_RIGHT;
-				else if (isFighting)
-					ani = MARIO_ANI_FIGHT_RIGHT;
 				else
 					ani = MARIO_ANI_WALKING_RIGHT;
-					
+			/* if (isFighting)
+				ani = MARIO_ANI_FIGHT_RIGHT;
+					*/
 				//DebugOut(L"[a]  vx >0", ani);
 			}
 
@@ -246,12 +279,17 @@ void Mario::Render()
 					ani = MARIO_ANI_JUMP_LEFT;
 				else if (isSiting)
 					ani = MARIO_ANI_SIT_LEFT;
-				else if (isFighting)
-					ani = MARIO_ANI_FIGHT_LEFT;
 				else
 					ani = MARIO_ANI_WALKING_LEFT;
-					
+				/*if (isFighting)
+					ani = MARIO_ANI_FIGHT_LEFT;*/
 				//DebugOut(L"[a]  vx <0", ani);
+			}
+			if (isFighting && nx < 0) {
+					ani = MARIO_ANI_FIGHT_LEFT;
+			}
+			else if (isFighting && nx > 0) {
+				ani = MARIO_ANI_FIGHT_RIGHT;
 			}
 		}
 		
@@ -268,6 +306,9 @@ void Mario::Render()
 	if (isFighting) {
 		raccoon->RenderBoundingBox();
 	}
+	//DebugOut(L"render %d\n");
+	for (int i = 0; i < fires.size(); i++)
+		fires[i]->Render();
 	
 }
 
@@ -334,15 +375,41 @@ void Mario::SetState(int state)
 		break;
 	case MARIO_STATE_FIGHT:
 		isFighting = true;
-		raccoon->SetPosition(this->x, this->y + 15);
 		if (nx > 0)
 			raccoon->SetState(MARIO_RACCOON_STATE_FIGHT_RIGHT);
 		else raccoon->SetState(MARIO_RACCOON_STATE_FIGHT_LEFT);
 		break;
 	case MARIO_STATE_NOT_FIGHT:
 		isFighting = false;
+		isSiting = false;
+		raccoon->SetState(MARIO_RACCOON_STATE_OUT);
 		break;
+	case MARIO_STATE_FIRE:
+		shooting == true;
+		AddFire();
+		shooting == false;
+		break;
+	
+	case MARIO_STATE_NOT_FIRE:
+		shooting == false;
+		break;
+
 	}
+}
+void Mario::AddFire() {
+	fire = new MARIO_FIRE();
+	fire->AddAnimation(501);
+	fire->AddAnimation(502);
+	fire->SetPosition(x, y);
+	if (nx > 0) {
+		fire->SetState(MARIO_FIRE_STATE_FIRE_RIGHT);
+	}
+	else {
+		fire->SetState(MARIO_FIRE_STATE_FIRE_LEFT);
+	}
+
+	fires.push_back(fire);
+	DebugOut(L"state ban: %d\n", fires.size());
 }
 
 void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -386,5 +453,5 @@ void Mario::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	Game::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 255);
+	Game::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 0);
 }

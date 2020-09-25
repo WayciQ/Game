@@ -26,6 +26,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MARIO_FIRE.cpp" />
     <ClCompile Include="MARIO_RACCOON.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="MARIO_FIRE.h" />
     <ClInclude Include="MARIO_RACCOON.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />

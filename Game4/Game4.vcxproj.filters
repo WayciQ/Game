@@ -45,6 +45,9 @@
     <ClCompile Include="MARIO_RACCOON.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MARIO_FIRE.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MARIO_RACCOON.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MARIO_FIRE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

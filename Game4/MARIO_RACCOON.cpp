@@ -10,15 +10,23 @@ void MARIO_RACCOON::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
+	if (state == MARIO_RACCOON_STATE_OUT) {
+		r = x;
+		b = y;
+	}
+	else
 	if (state == MARIO_RACCOON_STATE_FIGHT_LEFT) {
 		l = x - 8;
+		t = y + 17;
 		r = x + 25;
-		b = y + MARIO_RACCOON_FIGHT_HEIGHT;
+		b = y + 29;
 	}
 	else {
+		t = y + 17;
 		r = x + 33;
-		b = y + MARIO_RACCOON_FIGHT_HEIGHT;
+		b = y + 29;
 	}
+
 }
 void MARIO_RACCOON::RenderBoundingBox()
 {
@@ -34,7 +42,7 @@ void MARIO_RACCOON::RenderBoundingBox()
 	rect.top = 0;
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
-	Game::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 173);
+	Game::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 0);
 }
 void MARIO_RACCOON::SetState(int state) {
 	GameObject::SetState(state);
@@ -46,15 +54,16 @@ void MARIO_RACCOON::SetState(int state) {
 
 }
 void MARIO_RACCOON::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
+	GameObject::Update(dt);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
-	if(state != MARIO_RACCOON_STATE_OUT)
-		CalcPotentialCollisions(coObjects, coEvents);
+	
+	CalcPotentialCollisions(coObjects, coEvents);
+		
 	
 	if (coEvents.size() == 0)
 	{
-		DebugOut(L"zo roi: %d \n", coEvents.size());
 		
 	}
 	else
@@ -70,10 +79,11 @@ void MARIO_RACCOON::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			{
 				Goomba* goomba = dynamic_cast<Goomba*>(e->obj);
 
-				if (e->nx != 0) {
+				if (e->nx != 0 && nx != 0 ) {
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 					{
 						goomba->SetState(GOOMBA_STATE_DIE);
+						//DebugOut(L"cham nef: %d \n", e->nx);
 					}
 				}
 			}

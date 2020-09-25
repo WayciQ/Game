@@ -130,5 +130,5 @@ void GameObject::AddAnimation(int aniId)
 
 GameObject::~GameObject()
 {
-	/*if (animations.size() != NULL) animations.clear();*/
+	
 }
